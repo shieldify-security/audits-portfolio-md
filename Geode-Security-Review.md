@@ -52,7 +52,7 @@ The Portal is the beating heart of the Geode protocol. Here are some of its most
 # 4. Risk Classification
 
 | Severity               | Impact: High | Impact: Medium | Impact: Low |
-| ---------------------- | ------------ | -------------- | ----------- |
+|:----------------------:|:------------:|:--------------:|:-----------:|
 | **Likelihood: High**   | Critical     | High           | Medium      |
 | **Likelihood: Medium** | High         | Medium         | Low         |
 | **Likelihood: Low**    | Medium       | Low            | Low         |
@@ -82,7 +82,7 @@ Last but not least, we would like to emphasize that the Geode team has been very
 ## 5.1 Protocol Summary
 
 | **Project Name**             | Geode Finance                                                                                                                     |
-| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+|:----------------------------:|:---------------------------------------------------------------------------------------------------------------------------------:|
 | **Repository**               | [`Portal-Eth`](https://github.com/Geodefi/Portal-Eth/)                                                                            |
 | **Type of Project**          | Decentralized & Liquid Staking Pools                                                                                              |
 | **Audit Timeline**           | 4 weeks                                                                                                                           |
@@ -94,7 +94,7 @@ Last but not least, we would like to emphasize that the Geode team has been very
 The following smart contracts were in the scope of the audit:
 
 | File                                                                 | nSLOC |
-| -------------------------------------------------------------------- | ----- |
+| -------------------------------------------------------------------- |:-----:|
 | contracts/Portal/gETH.sol                                            | 110   |
 | contracts/Portal/middlewares/ERC20PermitMiddleware.sol               | 52    |
 | contracts/Portal/middlewares/ERC20Middleware.sol                     | 120   |
@@ -125,7 +125,7 @@ The following number of issues have been identified, sorted by their severity:
 - **Gas Optimization** issues: 9
 
 | **ID** | **Title**                                                                                                        | **Severity**     |
-| ------ | ---------------------------------------------------------------------------------------------------------------- | ---------------- |
+|:------:| ---------------------------------------------------------------------------------------------------------------- |:----------------:|
 | [L-01] | Wrong Storage Gap Value May Break Storage Layout in New Contract Version                                         | Low              |
 | [L-02] | Essential Roles Setter Functions Implement Single-Step Role Transfer                                             | Low              |
 | [L-03] | Protocol will not Work on Most of the Supported Blockchains due to hardcoded `DEPOSIT_CONTRACT` Address          | Low              |

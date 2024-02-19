@@ -9,6 +9,8 @@ This security review does not guarantee bulletproof protection against a hack or
 
 # 3. About <NAME>
 
+N/A
+
 Learn more about <NAME>’s concept and the technicalities behind it [here]().
 
 ## 3.1. Observations

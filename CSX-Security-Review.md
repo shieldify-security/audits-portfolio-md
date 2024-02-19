@@ -100,7 +100,7 @@ The following number of issues have been identified, sorted by their severity:
 | [M-04] | Some Trade-Terminating Functions Are Not Calling `removeAssetIdUsed()` Internally, Potentially Leading The Same Skin Not Being Tradable On CSX Again                      |    Medium    |
 | [M-05] | Users Can Use the Referral System to Refer Themselves in Order to Buy Skins at a Discount                                                                                 |    Medium    |
 | [M-06] | Malicious Buyers Can Get Skins Without Paying For Them If The Steam Trade Is Accepted By the Seller After More Than 24 Hours Have Passed Since the Buy Commit Placement   |    Medium    |
-| [M-07] | `Vested CSX` to `Regular CSX` Conversion Process Enables Potential Unauthorized Withdrawal of Staked Deposits by Malicious Council                                           |    Medium    |
+| [M-07] | `Vested CSX` to `Regular CSX` Conversion Process Enables Potential Unauthorized Withdrawal of Staked Deposits by Malicious Council                                        |    Medium    |
 | [M-08] | Tokens with a `Fee-On-Transfer` Mechanism Could Break the Protocol                                                                                                        |    Medium    |
 | [L-01] | DoS Attack on `getTradeIndexesByStatus()` Function in `CSXTradeFactory.sol` Contract By Creating Listings with Large Sticker Arrays                                       |     Low      |
 | [L-02] | If a Referral Code Owner Gets Blacklisted From `USDC/USDT`, Seller Trade Rewards Will Get Locked                                                                          |     Low      |

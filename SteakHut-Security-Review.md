@@ -1,6 +1,7 @@
 # 1. About Shieldify
 
-We are Shieldify Security – Revolutionizing Web3 Security. Elevating standards with a unique subscription model that grants the customer unlimited audits within the subscription period!
+We are Shieldify Security – Revolutionizing Web3 security. Elevating standards with top-tier reports and a unique subscription-based auditing model.
+Learn more about us at [`shieldify.org`](https://shieldify.org/) or [`@ShieldifySec`](https://twitter.com/ShieldifySec)
 
 # 2. Disclaimer
 

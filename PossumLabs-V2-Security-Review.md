@@ -41,6 +41,12 @@ Take a deep dive into Possum's documentation [here](https://possum-labs.gitbook.
 
 # 5. Security Review Summary
 
+The bug bounty race was conducted in the span of two weeks (March 11th until March 24th) and a total of 30 smart contract security researchers participated. This SPP was the second layer in PossumLabs’ planned security methodology for the codebase, which had been audited beforehand.
+
+Overall, the code is written to very high standards and implements very solid security practices. Shieldify’s Private Pool race contributed by identifying several issues of varying severity, around value extraction and potentially higher than intended earning, among other less severe findings which have been acknowledged by the Possum team.
+
+Shieldify's team extends their gratitude to Possum Labs’ team for their exceptional work communication and responsiveness.
+
 ## 5.1 Protocol Summary
 
 | **Project Name**             | Possum Labs V2                                                                                                                        |

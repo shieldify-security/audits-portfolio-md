@@ -68,7 +68,7 @@ The code lacks tests of any kind which hindered the auditing process to a certai
 | **Type of Project**          | Social GameFI Project                                                                                                              |
 | **Security Review Timeline** | 7 days                                                                                                                             |
 | **Review Commit Hash**       | [f43ad283290293e18e5d9ab0c9d56e29bffa3eb3](https://github.com/0xKingKoala/contracts/blob/f43ad283290293e18e5d9ab0c9d56e29bffa3eb3) |
-| **Fixes Review Commit Hash** | N/A                                                                                                                                |
+| **Fixes Review Commit Hash** | [a89aae41116904eea4e1b5293b9d0be219a6bbd5](https://github.com/0xKingKoala/contracts/blob/a89aae41116904eea4e1b5293b9d0be219a6bbd5) |
 
 ## 5.2 Scope
 
@@ -98,34 +98,34 @@ The following number of issues have been identified, sorted by their severity:
 - **Informational** issues: 6
 - **Gas Optimization** issues: 5
 
-| **ID** | **Title**                                                                                           |   **Severity**   | **Status** |
-| :----: | --------------------------------------------------------------------------------------------------- | :--------------: | :--------: |
-| [C-01] | Direct Loss of Rewards on Re-Staking                                                                |     Critical     |   Fixed    |
-| [C-02] | User Claimable Reward Tokens Can Be Locked                                                          |     Critical     |   Fixed    |
-| [H-01] | Re-staking Mechanism Can Lead to Contract Insolvency                                                |       High       |   Fixed    |
-| [H-02] | Yeet Functionality Flaw Upon Contract Deployment or Restart Due to Wrong Calculation                |       High       |   Fixed    |
-| [M-01] | Missing Vesting Period Verification in `unstake()` Method Puts Users at Risk                        |      Medium      |   Fixed    |
-| [M-02] | Significantly Decreased Entropy in `draftWinners()` Method                                          |      Medium      |   Fixed    |
-| [M-03] | Dysfunctional Instantiation of the `Yeetback.sol` Contract                                          |      Medium      |   Fixed    |
-| [M-04] | Incomplete Validation                                                                               |      Medium      |   Fixed    |
-| [L-01] | The `latestHistoryArr` Storage Array Is Ever Growing                                                |       Low        |   Fixed    |
-| [L-02] | `call()` Should Be Used Instead of `transfer()` on an `address payable`                             |       Low        |   Fixed    |
-| [L-03] | `yeet()` Function Should Be Pauseable                                                               |       Low        |Acknowledged|
-| [L-04] | Potentially Stuck Funds                                                                             |       Low        |Acknowledged|
-| [L-05] | Wrong Event Value Causes Confusion                                                                  |       Low        |   Fixed    |
-| [L-06] | Avoid Drafting the Same Winner Multiple Times by the Increasing Pseudo-Randomness in `Yeetback.sol` |       Low        |   Fixed    |
-| [R-01] | Miscellaneous Remarks                                                                               |  Recommendation  |   Fixed    |
-| [I-01] | `Yeet.sol` Does Not Compile                                                                         |  Informational   |   Fixed    |
-| [I-02] | Unnecessary Imports and Variables                                                                   |  Informational   |    N/A     |
-| [I-03] | Inconsistency with the Licenses                                                                     |  Informational   |   Fixed    |
-| [I-04] | Some Event Parameters Are Not `indexed`                                                             |  Informational   |   Fixed    |
-| [I-05] | Ownership Role Transfer Function Implement `Single-Step Role` Transfer                              |  Informational   |   Fixed    |
-| [I-06] | Some Write Functions Do Not Emit Events                                                             |  Informational   |   Fixed    |
-| [G-01] | `getWinners()` Method Missing Pagination                                                            | Gas Optimization |   Fixed    |
-| [G-02] | Cache array length outside of loop                                                                  | Gas Optimization |   Fixed    |
-| [G-03] | Don't initialize variables with a default value                                                     | Gas Optimization |   Fixed    |
-| [G-04] | Using `private` rather than `public` for constants, saves gas                                       | Gas Optimization |   Fixed    |
-| [G-05] | Use != 0 instead of > 0 for unsigned integer comparison                                             | Gas Optimization |   Fixed    |
+| **ID** | **Title**                                                                                           |   **Severity**   |  **Status**  |
+| :----: | --------------------------------------------------------------------------------------------------- | :--------------: | :----------: |
+| [C-01] | Direct Loss of Rewards on Re-Staking                                                                |     Critical     |    Fixed     |
+| [C-02] | User Claimable Reward Tokens Can Be Locked                                                          |     Critical     |    Fixed     |
+| [H-01] | Re-staking Mechanism Can Lead to Contract Insolvency                                                |       High       |    Fixed     |
+| [H-02] | Yeet Functionality Flaw Upon Contract Deployment or Restart Due to Wrong Calculation                |       High       |    Fixed     |
+| [M-01] | Missing Vesting Period Verification in `unstake()` Method Puts Users at Risk                        |      Medium      |    Fixed     |
+| [M-02] | Significantly Decreased Entropy in `draftWinners()` Method                                          |      Medium      |    Fixed     |
+| [M-03] | Dysfunctional Instantiation of the `Yeetback.sol` Contract                                          |      Medium      |    Fixed     |
+| [M-04] | Incomplete Validation                                                                               |      Medium      |    Fixed     |
+| [L-01] | The `latestHistoryArr` Storage Array Is Ever Growing                                                |       Low        |    Fixed     |
+| [L-02] | `call()` Should Be Used Instead of `transfer()` on an `address payable`                             |       Low        |    Fixed     |
+| [L-03] | `yeet()` Function Should Be Pauseable                                                               |       Low        | Acknowledged |
+| [L-04] | Potentially Stuck Funds                                                                             |       Low        | Acknowledged |
+| [L-05] | Wrong Event Value Causes Confusion                                                                  |       Low        |    Fixed     |
+| [L-06] | Avoid Drafting the Same Winner Multiple Times by the Increasing Pseudo-Randomness in `Yeetback.sol` |       Low        |    Fixed     |
+| [R-01] | Miscellaneous Remarks                                                                               |  Recommendation  |    Fixed     |
+| [I-01] | `Yeet.sol` Does Not Compile                                                                         |  Informational   |    Fixed     |
+| [I-02] | Unnecessary Imports and Variables                                                                   |  Informational   |     N/A      |
+| [I-03] | Inconsistency with the Licenses                                                                     |  Informational   |    Fixed     |
+| [I-04] | Some Event Parameters Are Not `indexed`                                                             |  Informational   |    Fixed     |
+| [I-05] | Ownership Role Transfer Function Implement `Single-Step Role` Transfer                              |  Informational   |    Fixed     |
+| [I-06] | Some Write Functions Do Not Emit Events                                                             |  Informational   |    Fixed     |
+| [G-01] | `getWinners()` Method Missing Pagination                                                            | Gas Optimization |    Fixed     |
+| [G-02] | Cache array length outside of loop                                                                  | Gas Optimization |    Fixed     |
+| [G-03] | Don't initialize variables with a default value                                                     | Gas Optimization |    Fixed     |
+| [G-04] | Using `private` rather than `public` for constants, saves gas                                       | Gas Optimization |    Fixed     |
+| [G-05] | Use != 0 instead of > 0 for unsigned integer comparison                                             | Gas Optimization |    Fixed     |
 
 # 7. Findings
 
@@ -545,6 +545,7 @@ File: [src/Yeetback.sol](https://github.com/0xKingKoala/contracts/blob/f43ad2832
 Implement the following validation checks:
 
 - File: `NFTVesting.sol`
+
 ```diff
 constructor(IERC20 _token, INFTContract _nftContract, uint256 _tokenAmount, uint256 _nftAmount, uint256 _startTime, uint256 _vestingPeriod) {
 +  require(_startTime >= block.timestamp, "NFTVesting: startTime should be in the future");
@@ -558,6 +559,7 @@ function claim(uint256 tokenId) public {
 ```
 
 - File: `Stake.sol`
+
 ```diff
 function stake(uint256 amount) external {
 +   require(amount != 0, "Invalid stake amount");
@@ -569,6 +571,7 @@ function startUnstake(uint256 unStakeAmount) external {
 ```
 
 - File: `OnlyYeetContract.sol`
+
 ```diff
 function setYeetContract(address _yeetContract) external onlyOwner {
 +   require(_yeetContract != address(0), "Invalid yeet contract address");
@@ -576,6 +579,7 @@ function setYeetContract(address _yeetContract) external onlyOwner {
 ```
 
 - File: `Reward.sol`
+
 ```diff
 function addYeetVolume(address user, uint256 amount) external onlyYeetOwner {
 -   require(amount >= 0, "Amount must be greater than 0");
@@ -585,6 +589,7 @@ function addYeetVolume(address user, uint256 amount) external onlyYeetOwner {
 ```
 
 - File: `Yeet.sol`
+
 ```diff
 constructor(YeetToken _token, Reward _reward, DiscreteStakingRewards _staking, YeetGameSettings _gameSettings, address _publicGoodsAddress, address _lpStakingAddress, address _teamAddress) Pauseable(msg.sender) {
 +   require(_publicGoodsAddress != address(0), "Invalid public goods address");
@@ -614,6 +619,7 @@ function setYeetardsNFTsAddress(address _yeetardsNFTsAddress) external onlyOwner
 ```
 
 - File: `Yeetback.sol`
+
 ```diff
 constructor(address _entropy, address _entropyProvider) Ownable(msg.sender) {
 +   require(_entropy != address(0), "Invalid entropy address");

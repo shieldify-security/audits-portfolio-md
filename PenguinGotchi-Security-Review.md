@@ -8,11 +8,9 @@ Learn more about us at [shieldify.org](https://shieldify.org/).
 
 This security review does not guarantee bulletproof protection against a hack or exploit. Smart contracts are a novel technological feat with many known and unknown risks. The protocol, which this report is intended for, indemnifies Shieldify Security against any responsibility for any misbehavior, bugs, or exploits affecting the audited code during any part of the project's life cycle. It is also pivotal to acknowledge that modifications made to the audited code, including fixes for the issues described in this report, may introduce new problems and necessitate additional auditing.
 
-# 3. About Pengugotchi
+# 3. About PenguinGotchi
 
-Pengugotchi is a blockchain-based virtual pet adventure where you nurture penguins, embark on thrilling missions, and strategically manage resources to earn rewards! Your penguins depend on your daily care to stay alive and thrive. Feed them, embark on thrilling adventures, level them up, and strategically earn valuable $GOTCHI rewards. Balance immediate rewards with long-term compounding to maximize your success.
-
-Learn more: [Docs](https://docs.pengugotchi.fun/)
+PenguinGotchi is a blockchain-based virtual pet adventure where you nurture penguins, embark on thrilling missions, and strategically manage resources to earn rewards! Your penguins depend on your daily care to stay alive and thrive. Feed them, embark on thrilling adventures, level them up, and strategically earn valuable $GOTCHI rewards. Balance immediate rewards with long-term compounding to maximize your success.
 
 # 4. Risk Classification
 
@@ -41,11 +39,11 @@ The security review lasted 7 days with a total of 168 hours dedicated by the Shi
 
 Overall, the code is well-written. The audit report identified two High-severity, two Medium-severity and one Low-severity issues, primarily related to predictable randomness, inability to purchase new items and incorrect validation.
 
-The Pengugotchi team has been highly responsive to the Shieldify research team’s inquiries and promptly implemented all recommendations.
+The PenguinGotchi team has been highly responsive to the Shieldify research team’s inquiries and promptly implemented all recommendations.
 
 ## 5.1 Protocol Summary
 
-| **Project Name**             | Pengugotchi                                                                                                                     |
+| **Project Name**             | PenguinGotchi                                                                                                                   |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
 | **Repository**               | [pengu-sc](https://github.com/WebitLabs/pengu-sc)                                                                               |
 | **Type of Project**          | GameFi                                                                                                                          |

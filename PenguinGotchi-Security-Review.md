@@ -8,9 +8,11 @@ Learn more about us at [shieldify.org](https://shieldify.org/).
 
 This security review does not guarantee bulletproof protection against a hack or exploit. Smart contracts are a novel technological feat with many known and unknown risks. The protocol, which this report is intended for, indemnifies Shieldify Security against any responsibility for any misbehavior, bugs, or exploits affecting the audited code during any part of the project's life cycle. It is also pivotal to acknowledge that modifications made to the audited code, including fixes for the issues described in this report, may introduce new problems and necessitate additional auditing.
 
-# 3. About PenguinGotchi
+# 3. About Pengugotchi
 
-PenguinGotchi is a blockchain-based virtual pet adventure where you nurture penguins, embark on thrilling missions, and strategically manage resources to earn rewards! Your penguins depend on your daily care to stay alive and thrive. Feed them, embark on thrilling adventures, level them up, and strategically earn valuable $GOTCHI rewards. Balance immediate rewards with long-term compounding to maximize your success.
+Pengugotchi is a blockchain-based virtual pet adventure where you nurture penguins, embark on thrilling missions, and strategically manage resources to earn rewards! Your penguins depend on your daily care to stay alive and thrive. Feed them, embark on thrilling adventures, level them up, and strategically earn valuable $GOTCHI rewards. Balance immediate rewards with long-term compounding to maximize your success.
+
+Learn more: [Docs](https://docs.pengugotchi.fun/)
 
 # 4. Risk Classification
 
@@ -37,13 +39,13 @@ PenguinGotchi is a blockchain-based virtual pet adventure where you nurture peng
 
 The security review lasted 7 days with a total of 168 hours dedicated by the Shieldify team.
 
-Overall, the code is well-written. The audit report identified two High-severity, two Medium-severity and one Low-severity issues, primarily related to predictable randomness, inability to purchase new items and incorrect validation.
+Overall, the code is well-written. The audit report identified two High-severity, one Medium-severity and one Low-severity issues, primarily related to predictable randomness, inability to purchase new items and incorrect validation.
 
-The PenguinGotchi team has been highly responsive to the Shieldify research team’s inquiries and promptly implemented all recommendations.
+The Pengugotchi team has been highly responsive to the Shieldify research team’s inquiries and promptly implemented all recommendations.
 
 ## 5.1 Protocol Summary
 
-| **Project Name**             | PenguinGotchi                                                                                                                   |
+| **Project Name**             | Pengugotchi                                                                                                                     |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
 | **Repository**               | [pengu-sc](https://github.com/WebitLabs/pengu-sc)                                                                               |
 | **Type of Project**          | GameFi                                                                                                                          |
@@ -72,16 +74,15 @@ The following smart contracts were in the scope of the security review:
 The following number of issues have been identified, sorted by their severity:
 
 - **Critical** and **High** issues: 2
-- **Medium** issues: 2
+- **Medium** issues: 1
 - **Low** issues: 1
 
-| **ID** | **Title**                                                                                                   | **Severity** |  **Status**  |
-| :----: | ----------------------------------------------------------------------------------------------------------- | :----------: | :----------: |
-| [H-01] | Predictable Randomness in Activity Outcomes                                                                 |     High     |    Fixed     |
-| [H-02] | User Can Be Permanently Denied from Purchasing New Penguins Due to Incorrect Alive Penguin Count Validation |     High     |    Fixed     |
-| [M-01] | Maximum Level Bypass in `fastUpgradePenguin()`                                                              |    Medium    |    Fixed     |
-| [M-02] | Penguin Owners Can Bypass Fast Upgrade Cooldown Through Inconsistent Timestamp Updates                      |    Medium    | Acknowledged |
-| [L-01] | Wrong conditional logic affecting player registration mechanism in `buyPenguin()`                           |     Low      |    Fixed     |
+| **ID** | **Title**                                                                                                   | **Severity** | **Status** |
+| :----: | ----------------------------------------------------------------------------------------------------------- | :----------: | :--------: |
+| [H-01] | Predictable Randomness in Activity Outcomes                                                                 |     High     |   Fixed    |
+| [H-02] | User Can Be Permanently Denied from Purchasing New Penguins Due to Incorrect Alive Penguin Count Validation |     High     |   Fixed    |
+| [M-01] | Maximum Level Bypass in `fastUpgradePenguin()`                                                              |    Medium    |   Fixed    |
+| [L-01] | Wrong conditional logic affecting player registration mechanism in `buyPenguin()`                           |     Low      |   Fixed    |
 
 # 7. Findings
 
@@ -326,96 +327,6 @@ Cap the max level at 10 in `fastUpgradePenguin()`, and update `_fastUpgradeCost(
 ## Team Response
 
 Fixed.
-
-# [M-02] Penguin Owners Can Bypass Fast Upgrade Cooldown Through Inconsistent Timestamp Updates
-
-## Severity
-
-Medium Risk
-
-## Description
-
-The `PenguinManager` contract contains an inconsistency in how upgrade timestamp tracking is handled between the `upgradePenguin()` and `fastUpgradePenguin()` functions. The vulnerability stems from asymmetric timestamp updates that create an exploitable bypass mechanism for the fast upgrade cooldown protection.
-
-In the `fastUpgradePenguin()` function, both `lastFastUpgradeTime` and `lastUpgradeTime` are updated to the current block timestamp when a fast upgrade is executed. However, in the `upgradePenguin()` function, only `lastUpgradeTime` is updated while `lastFastUpgradeTime` remains unchanged. This asymmetry creates a scenario where the cooldown validation logic can be circumvented.
-
-The fast upgrade cooldown check validates whether sufficient time has passed since the last fast upgrade by comparing `block.timestamp` against `penguin.lastFastUpgradeTime + settings.intervals.fastUpgradeTimeout()`. When a user performs a regular upgrade through `upgradePenguin()`, the `lastFastUpgradeTime` remains at its previous value, effectively resetting the baseline for the next fast upgrade cooldown calculation. This allows users to perform a regular upgrade immediately followed by a fast upgrade without respecting the intended fast upgrade cooldown period.
-
-## Location of Affected Code
-
-File: [PenguinManager.sol](https://github.com/WebitLabs/pengu-sc/blob/cd9e0fd078f55dbd1067be0fd4b25002ac59a425/src/PenguinManager.sol)
-
-```solidity
-function upgradePenguin(uint256 penguinId)
-    external
-    penguinExists(penguinId)
-    onlyPenguinOwner(msg.sender, penguinId)
-    penguinAlive(penguinId)
-    underMaxLevel(penguinId)
-{
-    Penguin storage penguin = penguins[penguinId];
-
-    uint256 paidActions = penguin.payedActions;
-    uint256 requiredActions = _getRequiredActions(penguin);
-    if (paidActions < requiredActions) {
-        revert InsufficientPaidActions(paidActions, requiredActions);
-    }
-
-    if (
-        block.timestamp < penguin.lastUpgradeTime + settings.intervals.levelUpgradeTimeout
-            && penguin.lastUpgradeTime != 0
-    ) {
-        revert PenguinCannotUpgrade(
-            penguin.lastUpgradeTime + settings.intervals.levelUpgradeTimeout, block.timestamp
-        );
-    }
-
-    penguin.level++;
-    penguin.payedActions = 0;
-    penguin.lastUpgradeTime = block.timestamp;
-}
-```
-
-File: [PenguinManager.sol](https://github.com/WebitLabs/pengu-sc/blob/cd9e0fd078f55dbd1067be0fd4b25002ac59a425/src/PenguinManager.sol)
-
-```solidity
-function fastUpgradePenguin(uint256 penguinId)
-    external
-    whenNotPaused
-    penguinExists(penguinId)
-    onlyPenguinOwner(msg.sender, penguinId)
-    penguinAlive(penguinId)
-{
-    _rewardPayment(_fastUpgradeCost(penguins[penguinId]));
-
-    if (
-        block.timestamp < penguins[penguinId].lastFastUpgradeTime + settings.intervals.fastUpgradeTimeout
-            && penguins[penguinId].lastFastUpgradeTime != 0
-    ) {
-        revert PenguinCannotUpgrade(
-            penguins[penguinId].lastFastUpgradeTime + settings.intervals.fastUpgradeTimeout, block.timestamp
-        );
-    }
-
-    Penguin storage penguin = penguins[penguinId];
-    penguin.lastFastUpgradeTime = block.timestamp;
-    penguin.lastUpgradeTime = block.timestamp;
-    penguin.payedActions = 0;
-    penguin.level++;
-}
-```
-
-## Impact
-
-The exploitation of this vulnerability undermines the game's economic balance and progression mechanics designed to regulate penguin advancement rates. Players can achieve faster penguin level progression than intended by the game designers, potentially creating unfair advantages over users who follow the intended upgrade patterns.
-
-## Recommendation
-
-The vulnerability should be resolved by ensuring consistent timestamp update behavior across both upgrade functions. The `upgradePenguin()` function must be modified to update both `lastUpgradeTime` and `lastFastUpgradeTime` to the current block timestamp, maintaining the same timestamp synchronization logic implemented in `fastUpgradePenguin()`.
-
-## Team Response
-
-Acknowledged.
 
 # [L-01] Wrong conditional logic affecting player registration mechanism in `buyPenguin()`
 

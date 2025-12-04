@@ -25,7 +25,7 @@ Learn more about Pear’s concept and the technicalities behind it [here](https:
 
 - `GMXFactory.sol` - creates new pair positions (adapters) and implements functionalities to manage them
 - `GMXAdapter.sol` - GMX pair position adapter. An interface between GMX positions and position owners.
-- • `NFTPosition.sol` - allows for position tokenization and making it transferrable.
+- `NFTPosition.sol` - allows for position tokenization and making it transferrable.
 - `Admin` - has powers to set all the Pear protocol fees, and referrals and upgrade the protocol
 - `Position owner` - user of the protocol. Are owners of GMXAdapter owning GMX position, hence owners of the positions.
 - `Stakers and Treasury` - fees recipient.

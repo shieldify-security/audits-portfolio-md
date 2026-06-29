@@ -219,7 +219,7 @@ High Risk
 ## Description
 
 NFTs can be stolen by the blacklisted operators. They can then burn/sell afterwards.
-Impact is high, as the victim NFT owner cannot revoke the approval from this balcaklisted operator because of this line below
+Impact is high, as the victim NFT owner cannot revoke the approval from this blacklisted operator because of this line below
 
 Root cause :
 

@@ -8,7 +8,7 @@ Learn more about us at [`shieldify.org`](https://shieldify.org/).
 
 This security review does not guarantee bulletproof protection against a hack or exploit. Smart contracts are a novel technological feat with many known and unknown risks. The protocol, which this report is intended for, indemnifies Shieldify Security against any responsibility for any misbehavior, bugs, or exploits affecting the audited code during any part of the project's life cycle. It is also pivotal to acknowledge that modifications made to the audited code, including fixes for the issues described in this report, may introduce new problems and necessitate additional auditing.
 
-# 3. About Pear Protocol
+# 3. About Pear Protocol - Vault
 
 Pear Protocol represents an innovative solution designed to streamline and enhance the efficiency of on-chain pairs trading. It enables users to execute leveraged long and short positions within a single transaction, addressing the complexities and inefficiencies traditionally associated with pair trading in cryptocurrencies. By integrating a variety of on-chain trading engines alongside a dedicated user interface and experience, Pear Protocol simplifies the process of initiating simultaneous long and short positions in correlated assets, such as going long on BTC while shorting ETH with leverage.
 
@@ -67,16 +67,16 @@ The Pear team has done a great job with their test suite and provided exceptiona
 
 The following smart contracts were in the scope of the security review:
 
-| File                                     | nSLOC |
-| ---------------------------------------- | :---: |
-| src/hyperliquid/L1Read.sol               |  264  |
-| src/hyperliquid/ICoreWriter.sol          |    3  |
-| src/libraries/HyperliquidHelper.sol      |   55  |
-| src/CoreWriterReadCaller.sol             |   84  |
-| src/PearVaultFactory.sol                 |  111  |
-| src/PearVault.sol                        |  417  |
-| src/Comptroller.sol                      |  193  |
-| Total                                    | 1127  |
+| File                                | nSLOC |
+| ----------------------------------- | :---: |
+| src/hyperliquid/L1Read.sol          |  264  |
+| src/hyperliquid/ICoreWriter.sol     |   3   |
+| src/libraries/HyperliquidHelper.sol |  55   |
+| src/CoreWriterReadCaller.sol        |  84   |
+| src/PearVaultFactory.sol            |  111  |
+| src/PearVault.sol                   |  417  |
+| src/Comptroller.sol                 |  193  |
+| Total                               | 1127  |
 
 # 6. Findings Summary
 
@@ -98,20 +98,20 @@ The following number of issues have been identified, sorted by their severity:
 | [M-05] | In-Flight Transfers from `HyperEVM` to `HyperCore` Not Tracked in `totalAssets()` Causes Share Inflation |    Medium    |    Fixed     |
 | [M-06] | Withdrawal Request Lacks Recipient Parameter Causing DoS on Blacklist                                    |    Medium    |    Fixed     |
 | [M-07] | Deposit Limit Bypass via Receiver Manipulation                                                           |    Medium    |    Fixed     |
-| [L-01] | The `deposit(uint256)` Function Unusable Due to Reentrancy Guard Self-Lock                               |      Low     |    Fixed     |
-| [L-02] | Excess ETH Not Refunded in `loadFirstDeposit()`                                                          |      Low     |    Fixed     |
-| [L-03] | No Minimum Withdrawal Amount Allows Fee Avoidance                                                        |      Low     |    Fixed     |
-| [L-04] | Vault Configurations Cannot Be Modified or Disabled                                                      |      Low     |    Fixed     |
-| [L-05] | Creation Deposit Fee Has No Upper Bound Validation                                                       |      Low     |    Fixed     |
-| [L-06] | Missing Over-Limit User Enforcement When Updating Deposit Tiers                                          |      Low     |     Fixed      |
-| [L-07] | Inefficient Capital Transfer Logic in Withdrawal System Disrupts Agent Strategies                        |      Low     |    Fixed     |
-| [L-08] | Documentation vs Implementation Mismatch Creates Deceptive Fee Structures                                |      Low     |    Fixed     |
-| [L-09] | `PearVault` Is Not ERC4626-Compliant                                                                     |      Low     |    Fixed     |
-| [L-10] | Felix Vault Asset Mismatch Not Validated                                                                 |      Low     |    Fixed     |
-| [L-11] | Fee Rounding Causes Undercollection by Fee Recipients                                                    |      Low     |    Fixed     |
-| [L-12] | `vaultOwner` Not Updated on Ownership Transfer                                                           |      Low     |    Fixed     |
-| [L-13] | Max Deposit Fails for 18-Decimal Tokens Due to Hardcoded 6-Decimal Assumption                            |      Low     | Acknowledged |
-| [L-14] | Missing Whitelist Removal Functionality                                                                  |      Low     |    Fixed     |
+| [L-01] | The `deposit(uint256)` Function Unusable Due to Reentrancy Guard Self-Lock                               |     Low      |    Fixed     |
+| [L-02] | Excess ETH Not Refunded in `loadFirstDeposit()`                                                          |     Low      |    Fixed     |
+| [L-03] | No Minimum Withdrawal Amount Allows Fee Avoidance                                                        |     Low      |    Fixed     |
+| [L-04] | Vault Configurations Cannot Be Modified or Disabled                                                      |     Low      |    Fixed     |
+| [L-05] | Creation Deposit Fee Has No Upper Bound Validation                                                       |     Low      |    Fixed     |
+| [L-06] | Missing Over-Limit User Enforcement When Updating Deposit Tiers                                          |     Low      |    Fixed     |
+| [L-07] | Inefficient Capital Transfer Logic in Withdrawal System Disrupts Agent Strategies                        |     Low      |    Fixed     |
+| [L-08] | Documentation vs Implementation Mismatch Creates Deceptive Fee Structures                                |     Low      |    Fixed     |
+| [L-09] | `PearVault` Is Not ERC4626-Compliant                                                                     |     Low      |    Fixed     |
+| [L-10] | Felix Vault Asset Mismatch Not Validated                                                                 |     Low      |    Fixed     |
+| [L-11] | Fee Rounding Causes Undercollection by Fee Recipients                                                    |     Low      |    Fixed     |
+| [L-12] | `vaultOwner` Not Updated on Ownership Transfer                                                           |     Low      |    Fixed     |
+| [L-13] | Max Deposit Fails for 18-Decimal Tokens Due to Hardcoded 6-Decimal Assumption                            |     Low      | Acknowledged |
+| [L-14] | Missing Whitelist Removal Functionality                                                                  |     Low      |    Fixed     |
 | [I-01] | Unnecessary Reentrancy Guard in Comptroller                                                              |     Info     |    Fixed     |
 | [I-02] | Redundant `_transferOwnership()` Call in Initialize                                                      |     Info     |    Fixed     |
 | [I-03] | Unused Constants in `Comptroller`                                                                        |     Info     |    Fixed     |
@@ -142,20 +142,22 @@ An attacker can call `redeem(victimShares, attackerAddress, victimAddress)` or `
 ## Location of Affected Code
 
 File: [src/PearVault.sol#L496-L509](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol#L496-L509)
+
 ```solidity
 function redeem(uint256 shares, address receiver, address user) public override(ERC4626Upgradeable, IERC4626) nonReentrant onlyActiveVault returns (uint256) {
     if (balanceOf(user) < shares) revert InsufficientBalance();
-    
+
     uint256 assets = super.previewRedeem(shares);
     if(!_canDirectWithdraw(assets)) {
         revert("Direct redeem not allowed. Use requestWithdrawal() for queued redeem");
     }
-    
+
     return _withdrawWithFee(shares, user, receiver);
 }
 ```
 
 File: [src/PearVault.sol#L512-L524](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol#L512-L524)
+
 ```solidity
 function withdraw(uint256 assets, address receiver, address owner) public override(ERC4626Upgradeable, IERC4626) nonReentrant onlyActiveVault returns (uint256) {
     if(!_canDirectWithdraw(assets)) {
@@ -169,6 +171,7 @@ function withdraw(uint256 assets, address receiver, address owner) public overri
 ```
 
 File: [src/PearVault.sol#L703-L709](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol#L703-L709)
+
 ```solidity
 function _withdrawWithFee(uint256 shares, address user, address receiver) internal returns (uint256) {
   // code
@@ -210,10 +213,13 @@ Fixed.
 High Risk
 
 ## Description
+
 A critical vulnerability exists in the withdrawal queue system that allows any user to force the backend system to liquidate all trading positions (both spot and perpetual) by requesting withdrawals for amounts equal to or exceeding the entire vault's Total Value Locked (TVL), even when they only own a small fraction of the vault shares.
 
 ### Vulnerability Details
+
 The `requestWithdrawal()` function only validates that the user has sufficient shares, but does not validate whether the asset value of those shares is reasonable compared to the vault's liquid capital:
+
 ```solidity
 function requestWithdrawal(uint256 shares) external override nonReentrant validAmount(shares) {
     if (shares == 0) revert InvalidAmount();
@@ -221,7 +227,7 @@ function requestWithdrawal(uint256 shares) external override nonReentrant validA
     if (status != VaultStatus.Active) revert VaultNotActive();
 
     uint256 withdrawalId = nextWithdrawalId++;
-    
+
     withdrawalQueue[withdrawalId] = WithdrawalRequest({
         user: msg.sender,
         shares: shares,
@@ -231,7 +237,7 @@ function requestWithdrawal(uint256 shares) external override nonReentrant validA
 
     userWithdrawalIds[msg.sender].push(withdrawalId);
     totalPendingShares += shares;  // ❌ Can represent more assets than vault liquidity
-    
+
     emit WithdrawalQueued(msg.sender, withdrawalId, shares, block.timestamp);
 }
 ```
@@ -246,11 +252,12 @@ The vault's capital is distributed across multiple locations:
 - Felix vault deposits (semi-liquid)
 
 When calculating `totalAssets()`:
+
 ```solidity
 function totalAssets() public view override returns (uint256) {
     uint256 vaultAssetBalance = vaultToken().balanceOf(address(this));
     uint256 agentWalletBalance = IERC20(vaultConfig.assetToken).balanceOf(agent);
-    
+
     if (totalSupply() == 0) {
         return vaultAssetBalance;
     }
@@ -266,6 +273,7 @@ function totalAssets() public view override returns (uint256) {
 **The Attack Vector:**
 
 Let's say:
+
 - Total vault TVL: $1,000,000
 - Vault liquid balance: $50,000 (5%)
 - Active trading positions: $950,000 (95% - in perp/spot positions)
@@ -285,9 +293,11 @@ Let's say:
 File: [src/PearVault.sol](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol)
 
 ## Impact
+
 Trading strategy effectiveness is reduced by forced liquidity maintenance.
 
 ## Recommendation
+
 Only allow them to request withdrawal for their shares.
 
 ## Team Response
@@ -301,9 +311,11 @@ Fixed.
 Medium Risk
 
 ## Description
+
 A malicious user can front-run legitimate withdrawal transactions by calling `requestWithdrawal()` to inflate `totalPendingShares`, thereby forcing all subsequent withdrawal attempts to fail and requiring them to use the withdrawal queue instead. This creates a griefing attack vector where a single user can temporarily disable direct withdrawals for all vault participants.
 
 ### Vulnerability Details
+
 The `requestWithdrawal()` function does not verify that the vault has sufficient balance to fulfil the withdrawal request at the time of request creation. It only checks:
 
 - The user has sufficient shares
@@ -314,21 +326,23 @@ function requestWithdrawal(uint256 shares) external override nonReentrant validA
     if (shares == 0) revert InvalidAmount();
     if (balanceOf(msg.sender) < shares) revert InsufficientBalance();
     if (status != VaultStatus.Active) revert VaultNotActive();
-    
+
     // ... creates request and increments totalPendingShares
     totalPendingShares += shares;
 }
 ```
 
 ### The Attack Vector
+
 The `_canDirectWithdraw()` function blocks direct withdrawals whenever `totalPendingShares > 0`:
+
 ```solidity
 function _canDirectWithdraw(uint256 amount) internal view returns (bool) {
     // Condition 1: No pending withdrawals in queue
     if (totalPendingShares > 0) {
         return false;  // ❌ Blocks ALL direct withdrawals
     }
-    
+
     // Condition 2: Vault must have sufficient balance for the withdrawal
     return vaultToken().balanceOf(address(this)) >= amount;
 }
@@ -348,22 +362,25 @@ function _canDirectWithdraw(uint256 amount) internal view returns (bool) {
 ## Location of Affected Code
 
 File: [src/PearVault.sol#L615-L623](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol#L615-L623)
+
 ```solidity
 function _canDirectWithdraw(uint256 amount) internal view returns (bool) {
     // Condition 1: No pending withdrawals in queue
     if (totalPendingShares > 0) {
         return false;  // ❌ Blocks ALL direct withdrawals
     }
-    
+
     // Condition 2: Vault must have sufficient balance for the withdrawal
     return vaultToken().balanceOf(address(this)) >= amount;
 }
 ```
 
 ## Impact
+
 All users must use the withdrawal queue even when the vault has sufficient liquidity
 
 ## Recommendation
+
 Add a balance sufficiency check in `requestWithdrawal()`.
 
 ## Team Response
@@ -395,6 +412,7 @@ The binary nature of `_canDirectWithdraw()` (requiring `totalPendingShares == 0`
 ## Location of Affected Code
 
 File: [src/PearVault.sol#L465-L493](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol#L465-L493)
+
 ```solidity
 function requestWithdrawal(uint256 shares) external override nonReentrant validAmount(shares) {
     if (shares == 0) revert InvalidAmount();
@@ -420,13 +438,14 @@ function requestWithdrawal(uint256 shares) external override nonReentrant validA
 ```
 
 File: [src/PearVault.sol#L615-L623](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol#L615-L623)
+
 ```solidity
 function _canDirectWithdraw(uint256 amount) internal view returns (bool) {
     // Condition 1: No pending withdrawals in queue
     if (totalPendingShares > 0) {
         return false;
     }
-    
+
     // Condition 2: Vault must have sufficient balance for the withdrawal
     return vaultToken().balanceOf(address(this)) >= amount;
 }
@@ -435,6 +454,7 @@ function _canDirectWithdraw(uint256 amount) internal view returns (bool) {
 The `withdraw()` and `redeem()` functions revert when `_canDirectWithdraw()` returns false:
 
 File: [src/PearVault.sol](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol)
+
 ```solidity
 function withdraw(uint256 assets, address receiver, address owner) public override nonReentrant onlyActiveVault returns (uint256) {
     if(!_canDirectWithdraw(assets)) {
@@ -507,6 +527,7 @@ The status is set to `Active` during initialization and remains unchangeable for
 ## Location of Affected Code
 
 File: [src/interfaces/IPearVault.sol#L45-L49](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/interfaces/IPearVault.sol#L45-L49)
+
 ```solidity
 enum VaultStatus {
     Active,
@@ -516,6 +537,7 @@ enum VaultStatus {
 ```
 
 File: [src/PearVault.sol#L165](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol#L165)
+
 ```solidity
 function _initializeContracts(address vaultOwner__, address agent_, string memory name_, address comptroller_) internal {
   // code
@@ -582,7 +604,7 @@ Users may receive significantly fewer shares on deposit or fewer assets on withd
 
 Add additional functions with slippage protection parameters as mentioned in the specification:
 
->If implementors intend to support EOA account access directly, they should consider adding an additional function call for `deposit()`/`mint()`/`withdraw()`/`redeem()` with the means to accommodate slippage loss or unexpected `deposit()`/`withdrawal()` limits, since they have no other means to revert the transaction if the exact output amount is not achieved.
+> If implementors intend to support EOA account access directly, they should consider adding an additional function call for `deposit()`/`mint()`/`withdraw()`/`redeem()` with the means to accommodate slippage loss or unexpected `deposit()`/`withdrawal()` limits, since they have no other means to revert the transaction if the exact output amount is not achieved.
 
 [eip-4626#security-considerations](https://eips.ethereum.org/EIPS/eip-4626#security-considerations)
 
@@ -605,6 +627,7 @@ The `transferToHyperCore()` function transfers vault assets to the HyperCore sys
 - The in-flight window is 1 block
 
 The `totalAssets()` function calculates the vault's total value by summing:
+
 1. Vault's asset token balance
 2. Agent wallet balance
 3. Agent's HyperCore perp account value
@@ -618,6 +641,7 @@ This allows a depositor to mint more shares than their deposit warrants, as the 
 ## Location of Affected Code
 
 File: [src/PearVault.sol#L547-L561](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol#L547-L561)
+
 ```solidity
 function transferToHyperCore(uint256 amount) external override onlyOwner nonReentrant validAmount(amount) {
     if (vaultToken().balanceOf(address(this)) < amount) revert InsufficientBalance();
@@ -635,6 +659,7 @@ function transferToHyperCore(uint256 amount) external override onlyOwner nonReen
 ```
 
 File: [src/PearVault.sol#L234-L276](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol#L234-L276)
+
 ```solidity
 function totalAssets() public view override(ERC4626Upgradeable, IERC4626) returns (uint256) {
     // 1. Vault asset token balance (6 decimals)
@@ -642,7 +667,7 @@ function totalAssets() public view override(ERC4626Upgradeable, IERC4626) return
 
     // 2. Agent wallet balance (6 decimals)
     uint256 agentWalletBalance = IERC20(vaultConfig.assetToken).balanceOf(agent);
-    
+
     // ... additional components ...
 
     // 3. Agent perp account value (6 decimals)
@@ -685,6 +710,7 @@ If the user's address becomes blacklisted by the asset token contract (USDC and 
 ## Location of Affected Code
 
 File: [src/PearVault.sol#L465-L493](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol#L465-L493)
+
 ```solidity
 function requestWithdrawal(uint256 shares) external override nonReentrant validAmount(shares) {
     // code
@@ -699,6 +725,7 @@ function requestWithdrawal(uint256 shares) external override nonReentrant validA
 ```
 
 File: [src/PearVault.sol#L659-L677](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol#L659-L677)
+
 ```solidity
 function _withdraw(uint256 withdrawalId) internal {
     WithdrawalRequest storage request = withdrawalQueue[withdrawalId];
@@ -720,7 +747,7 @@ A blacklisted user's pending withdrawal becomes permanently stuck. This blocks t
 
 ## Recommendation
 
-* Add a `receiver` parameter to the `requestWithdrawal()` function and store it in the `WithdrawalRequest` struct:
+- Add a `receiver` parameter to the `requestWithdrawal()` function and store it in the `WithdrawalRequest` struct:
 
 ```solidity
 struct WithdrawalRequest {
@@ -746,7 +773,7 @@ function requestWithdrawal(uint256 shares, address receiver) external override n
 
 Update `_withdraw()` to send assets to `request.receiver` instead of `request.user`.
 
-* Additionally, add the possibility for the admin to cancel withdrawal requests forcibly
+- Additionally, add the possibility for the admin to cancel withdrawal requests forcibly
 
 ## Team Response
 
@@ -759,9 +786,11 @@ Fixed.
 Medium Risk
 
 ## Description
+
 The `deposit()` limit enforcement mechanism can be completely bypassed by manipulating the receiver parameter in the `deposit()` and `mint()` functions. A user can exceed their tier-based deposit limits by depositing on behalf of other addresses (including fresh addresses they control), while the shares are minted to those addresses, effectively circumventing the investment cap restrictions.
 
 ### Root Cause
+
 The deposit limit check is performed on the receiver address rather than the `msg.sender` (the actual depositor/investor):
 
 ```solidity
@@ -778,10 +807,10 @@ function deposit(uint256 assets, address receiver) public override returns (uint
     }
 
     uint256 shares = super.deposit(assets, receiver);
-    
+
     // ❌ Tracks deposit for receiver, not msg.sender
     userDepositAmount[receiver] += assets;
-    
+
     emit Deposit(receiver, assets, shares);
     return shares;
 }
@@ -798,6 +827,7 @@ Who pays vs. Who receives are different entities:
 ## Location of Affected Code
 
 File: [src/PearVault.sol#L401-L431](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol#L401-L431)
+
 ```solidity
 function deposit(uint256 assets, address receiver) public override returns (uint256) {
     if (!firstDepositLoaded) revert FirstDepositNotLoaded();
@@ -812,19 +842,21 @@ function deposit(uint256 assets, address receiver) public override returns (uint
     }
 
     uint256 shares = super.deposit(assets, receiver);
-    
+
     // ❌ Tracks deposit for receiver, not msg.sender
     userDepositAmount[receiver] += assets;
-    
+
     emit Deposit(receiver, assets, shares);
     return shares;
 }
 ```
 
 ## Impact
+
 The entire purpose of tier-based investment limits is nullified.
 
 ## Recommendation
+
 Track and Limit the Depositor, not Receiver.
 
 ## Team Response
@@ -846,6 +878,7 @@ This makes the single-parameter `deposit()` function completely unusable.
 ## Location of Affected Code
 
 File: [src/PearVault.sol#L394-L398](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol#L394-L398)
+
 ```solidity
 function deposit(uint256 amount) external override nonReentrant onlyActiveVault validAmount(amount) {
     deposit(amount, msg.sender);
@@ -853,6 +886,7 @@ function deposit(uint256 amount) external override nonReentrant onlyActiveVault 
 ```
 
 File: [src/PearVault.sol#L402-L431](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol#L402-L431)
+
 ```solidity
  // ERC4626 deposit function
 function deposit(uint256 assets, address receiver) public override(ERC4626Upgradeable, IERC4626) nonReentrant onlyActiveVault returns (uint256){
@@ -869,10 +903,10 @@ function deposit(uint256 assets, address receiver) public override(ERC4626Upgrad
 
     // Let ERC4626 handle the rest (transfer + mint + event)
     uint256 shares = super.deposit(assets, receiver);
-    
+
     // Track deposit amount for receiver
     userDepositAmount[receiver] += assets;
-    
+
     emit Deposit(receiver, assets, shares);
     return shares;
 }
@@ -926,18 +960,19 @@ The `loadFirstDeposit()` function requires a minimum ETH amount for the creation
 ## Location of Affected Code
 
 File: [src/PearVault.sol#L186-L195](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol#L186-L195)
+
 ```solidity
 function loadFirstDeposit(uint256 amount) external payable nonReentrant {
   // code
   // Verify correct native token amount sent
   if (msg.value < creationFeeAmount) revert InsufficientCreationFee();
-  
+
   // Transfer native token fee to fee recipient
   if (creationFeeAmount > 0) {
       address feeRecipient = comptroller.getFeeRecipient();
       (bool success, ) = payable(feeRecipient).call{value: creationFeeAmount}("");
       if (!success) revert InvalidAmount();
-      
+
       emit CreationFeeCollected(vaultOwner, creationFeeAmount, feeRecipient);
   }
   // code
@@ -990,12 +1025,14 @@ With the default withdrawal fee of 100 basis points (1%), any withdrawal of 100 
 Users can exploit this by splitting a large withdrawal into many small withdrawals, each at or below 100 units, effectively paying zero fees. This can be further optimized by deploying a smart contract that loops small withdrawals in a single transaction, reducing per-withdrawal gas overhead.
 
 Currently, this is not economically profitable given:
+
 - Native token (HYPE) price ~$33 USD
 - Gas price ~1 gwei
 - Withdrawal operation costs ~54,040 gas per our tests
 - Cost per withdrawal: ~54,040 × 1 gwei × $33 ≈ $0.0018
 
 However, this may become exploitable if:
+
 - Withdrawal fee percentage decreases
 - HYPE token price falls significantly
 - Gas prices decrease
@@ -1029,6 +1066,7 @@ The `VaultConfig` struct contains critical parameters, including asset token add
 ## Location of Affected Code
 
 File: [src/Comptroller.sol#L402-L413](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/Comptroller.sol#L402-L413)
+
 ```solidity
 function createVaultConfig(IVaultStructs.VaultConfig memory config) external onlyOwner returns (uint256) {
     require(config.assetToken != address(0), "Invalid asset token");
@@ -1087,11 +1125,13 @@ The `setCreationDepositFee()` function allows the owner to set an arbitrary fee 
 ## Location of Affected Code
 
 File: [src/Comptroller.sol#L61](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/Comptroller.sol#L61)
+
 ```solidity
 uint256 public constant MAX_CREATION_DEPOSIT = 1000; // 10% maximum
 ```
 
 File: [src/Comptroller.sol#L234-L241](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/Comptroller.sol#L234-L241)
+
 ```solidity
 function setCreationDepositFee(uint256 newFee) external override onlyOwner {
     uint256 oldFee = _creationDepositFee;
@@ -1137,6 +1177,7 @@ The system only performs deposit limit checks during new deposit transactions bu
 ## Location of Affected Code
 
 File: [src/Comptroller.sol#L344-L377](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/Comptroller.sol#L344-L377)
+
 ```solidity
 function updateDepositTier(uint256 index, uint256 minPearBalance, uint256 maxDepositAllowed) external onlyOwner {
     require(index < _depositTiers.length, "Invalid tier index");
@@ -1150,7 +1191,7 @@ function updateDepositTier(uint256 index, uint256 minPearBalance, uint256 maxDep
     }
 
     DepositTier memory oldTier = _depositTiers[index];
-    
+
     _depositTiers[index] = DepositTier({
         minPearBalance: minPearBalance,
         maxDepositAllowed: maxDepositAllowed
@@ -1196,13 +1237,14 @@ Low Risk
 
 ## Description
 
-The `_withdrawWithFee()` function in the `PearVault` contract implements inefficient capital transfer logic that unnecessarily pulls excessive funds from agent trading strategies. When the contract lacks sufficient balance to fulfil a withdrawal, the function transfers the entire withdrawal amount from the agent wallet instead of only transferring the deficit amount needed. 
+The `_withdrawWithFee()` function in the `PearVault` contract implements inefficient capital transfer logic that unnecessarily pulls excessive funds from agent trading strategies. When the contract lacks sufficient balance to fulfil a withdrawal, the function transfers the entire withdrawal amount from the agent wallet instead of only transferring the deficit amount needed.
 
 This results in agent funds being pulled from active trading positions and sitting idle in the contract vault, reducing overall strategy returns and creating capital inefficiency. The system fails to distinguish between deficit coverage and full withdrawal funding, causing unnecessary disruption to agent trading activities and suboptimal capital allocation across the protocol.
 
 ## Location of Affected Code
 
 File: [src/PearVault.sol#L679-L735](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol#L679-L735)
+
 ```solidity
 function _withdrawWithFee(uint256 shares, address user, address receiver) internal returns (uint256) {
     // Calculate assets to transfer before fees
@@ -1216,10 +1258,10 @@ function _withdrawWithFee(uint256 shares, address user, address receiver) intern
 
     // Calculate withdrawal fee using _feeOnTotal (deducts from total amount)
     uint256 feeAmount = _feeOnTotal(assetsBeforeFee, _exitFeeBasisPoints());
-    
+
     // Assets to transfer to user (after fee deduction)
     uint256 assetsToTransfer = assetsBeforeFee - feeAmount;
-    
+
     // ... rest of withdrawal logic continues
 }
 ```
@@ -1249,6 +1291,7 @@ The Pear Vault system exhibits critical discrepancies between documented fee str
 ## Location of Affected Code
 
 File: [src/Comptroller.sol#L34-L38](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/Comptroller.sol#L34-L38)
+
 ```solidity
 // In Comptroller.sol - Mismatched withdrawal fee (1% vs documented 0.5%)
 uint256 private _defaultWithdrawalFeeBPS = 100; // 1% DEFAULT, NOT 0.5%
@@ -1287,7 +1330,7 @@ Per ERC4626, calling `withdraw(assets, receiver, owner)` should transfer exactly
 
 ### 2. `maxDeposit()`, `maxMint()`, `maxWithdraw()`, `maxRedeem()` Not Overridden
 
-ERC4626 specifies that max* functions "MUST factor in both global and user-specific limits, like if deposits are entirely disabled (even temporarily), it MUST return 0."
+ERC4626 specifies that max\* functions "MUST factor in both global and user-specific limits, like if deposits are entirely disabled (even temporarily), it MUST return 0."
 
 `PearVault` has multiple conditions that disable operations:
 
@@ -1296,11 +1339,12 @@ ERC4626 specifies that max* functions "MUST factor in both global and user-speci
 3. `totalPendingShares > 0` disables direct withdrawals
 4. Per-user deposit limits from comptroller
 
-The inherited max* functions do not account for these constraints and return non-zero values when operations would actually revert.
+The inherited max\* functions do not account for these constraints and return non-zero values when operations would actually revert.
 
 ## Location of Affected Code
 
 File: [src/PearVault.sol#L512-L524](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol#L512-L524)
+
 ```solidity
 function withdraw(uint256 assets, address receiver, address owner) public override(ERC4626Upgradeable, IERC4626) nonReentrant onlyActiveVault returns (uint256) {
     if(!_canDirectWithdraw(assets)) {
@@ -1316,14 +1360,14 @@ function withdraw(uint256 assets, address receiver, address owner) public overri
 ## Impact
 
 1. Integrating protocols relying on ERC4626 compliance will receive fewer assets than requested from `withdraw()`
-2. Integrators checking max* functions before calling `deposit()`/`withdraw()` will encounter unexpected reverts
+2. Integrators checking max\* functions before calling `deposit()`/`withdraw()` will encounter unexpected reverts
 3. Automated strategies and aggregators may malfunction when interacting with the vault
 
 ## Recommendation
 
 1. Fix `withdraw()` to ensure the receiver gets exactly the requested asset amount by calculating shares to include fee compensation
 
-2. Override max* functions to return appropriate values:
+2. Override max\* functions to return appropriate values:
 
 ## Team Response
 
@@ -1344,6 +1388,7 @@ If a Felix vault with a different underlying asset is configured, the `totalAsse
 ## Location of Affected Code
 
 File: [src/PearVault.sol#L261-L268](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol#L261-L268)
+
 ```solidity
 function totalAssets() public view override(ERC4626Upgradeable, IERC4626) returns (uint256) {
   // code
@@ -1399,6 +1444,7 @@ When `feeAmount` is odd, `halfFeeAmount * 2 < feeAmount` by 1 wei. This 1 wei re
 ## Location of Affected Code
 
 File: [src/PearVault.sol#L720-L732](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol#L720-L732)
+
 ```solidity
 function _withdrawWithFee(uint256 shares, address user, address receiver) internal returns (uint256) {
   // code
@@ -1467,6 +1513,7 @@ Functions that will still use the **old owner** address (use `vaultOwner`):
 ## Location of Affected Code
 
 File: [src/PearVault.sol#L178](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol#L178)
+
 ```solidity
 function loadFirstDeposit(uint256 amount) external payable nonReentrant {
   if (msg.sender != vaultOwner) revert NotAuthorized();
@@ -1475,6 +1522,7 @@ function loadFirstDeposit(uint256 amount) external payable nonReentrant {
 ```
 
 File: [src/PearVault.sol#L416](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol#L416)
+
 ```solidity
 function deposit(uint256 assets, address receiver) public override(ERC4626Upgradeable, IERC4626) nonReentrant onlyActiveVault returns (uint256) {
   // code
@@ -1484,6 +1532,7 @@ function deposit(uint256 assets, address receiver) public override(ERC4626Upgrad
 ```
 
 File: [src/PearVault.sol#L725](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol#L725)
+
 ```solidity
 function _withdrawWithFee(uint256 shares, address user, address receiver) internal returns (uint256) {
   // code
@@ -1515,9 +1564,11 @@ Fixed.
 Low Risk
 
 ## Description
+
 The protocol incorrectly assumes that all underlying ERC-20 assets operate on 6 decimals, while some popular stablecoins use 18 decimals. This mismatch causes the computed maximum deposit limit to be inconsistent with the real token precision.
 
 Example impacted code:
+
 ```solidity
 uint256 maxAllowed = comptroller.getMaxAllowedInvestment(receiver);
 ```
@@ -1530,6 +1581,7 @@ And there are other places as well, which can get affected.
 ## Location of Affected Code
 
 File: [src/PearVault.sol#L450](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol#L450)
+
 ```solidity
 function mint(uint256 shares, address receiver) public override(ERC4626Upgradeable, IERC4626) nonReentrant onlyActiveVault returns (uint256) {
   // code
@@ -1539,6 +1591,7 @@ function mint(uint256 shares, address receiver) public override(ERC4626Upgradeab
 ```
 
 File: [src/PearVault.sol#L417](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol#L417)
+
 ```solidity
 function deposit(uint256 assets, address receiver) public override(ERC4626Upgradeable, IERC4626) nonReentrant onlyActiveVault returns (uint256) {
   // code
@@ -1548,9 +1601,11 @@ function deposit(uint256 assets, address receiver) public override(ERC4626Upgrad
 ```
 
 ## Impact
+
 Max deposit transaction fails for 18-decimal underlying tokens.
 
 ## Recommendation
+
 Normalize all boundary checks to asset decimals.
 
 ## Team Response
@@ -1564,11 +1619,13 @@ Acknowledged.
 Low Risk
 
 ## Description
+
 The `PearVaultFactory` contract implements a whitelist mechanism to control who can create vaults, but only provides a function to add users to the whitelist (`whitelistUser()`) with no corresponding function to remove them. This creates a permanent, irrevocable privilege escalation where once a user is whitelisted, they cannot be removed even if they become malicious, compromised, or no longer authorized.
 
 ## Location of Affected Code
 
 File: [src/PearVault.sol](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol)
+
 ```solidity
 mapping(address => bool) private _whitelisted;
 
@@ -1597,9 +1654,11 @@ function createVault(address owner_, address agent, string memory name_, string 
 ```
 
 ## Impact
- Inability to revoke access from compromised accounts, malicious users, or users who no longer need vault creation privileges, leading to permanent security risks and loss of access control.
+
+Inability to revoke access from compromised accounts, malicious users, or users who no longer need vault creation privileges, leading to permanent security risks and loss of access control.
 
 ## Recommendation
+
 Add a Simple Removal Function.
 
 ## Team Response
@@ -1690,6 +1749,7 @@ The `vaultToken()` function simply returns the ERC4626 underlying asset, which i
 ## Location of Affected Code
 
 File: [src/PearVault.sol#L339-L341](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol#L339-L341)
+
 ```solidity
 function vaultToken() public view returns (IERC20) {
     return IERC20(asset());
@@ -1746,6 +1806,7 @@ Additionally, the custom event has a non-standard signature with only 3 paramete
 ## Location of Affected Code
 
 File: [src/PearVault.sol#L423-L424](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol#L423-L424)
+
 ```solidity
 function deposit(uint256 assets, address receiver ) public override(ERC4626Upgradeable, IERC4626) nonReentrant onlyActiveVault returns (uint256) {
   // code
@@ -1754,12 +1815,13 @@ function deposit(uint256 assets, address receiver ) public override(ERC4626Upgra
 
   // Track deposit amount for receiver
   userDepositAmount[receiver] += assets;
-  
+
   emit Deposit(receiver, assets, shares);
 }
 ```
 
 File: [src/interfaces/IPearVault.sol#L57](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/interfaces/IPearVault.sol#L57)
+
 ```solidity
 event Deposit(address indexed user, uint256 amount, uint256 shares);
 ```
@@ -1795,6 +1857,7 @@ If this comment is followed during deployment configuration, incorrect token IDs
 ## Location of Affected Code
 
 File: [src/libraries/HyperliquidHelper.sol#L70-L75](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/libraries/HyperliquidHelper.sol#L70-L75)
+
 ```solidity
 /**
  * @notice Get spot balance from Hyperliquid precompile
@@ -1829,6 +1892,7 @@ The `requestWithdrawal()` function uses the `validAmount(shares)` modifier, whic
 ## Location of Affected Code
 
 File: [src/PearVault.sol#L465-L468](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/PearVault.sol#L465-L468)
+
 ```solidity
 function requestWithdrawal(uint256 shares) external override nonReentrant validAmount(shares) {
     if (shares == 0) revert InvalidAmount();
@@ -1851,20 +1915,22 @@ Fixed.
 Informational Risk
 
 ## Description
+
 The `sendFundsToSystem()` function uses raw ERC20 `transfer()` and `transferFrom()` calls without checking return values or using OpenZeppelin's SafeERC20 library. This can lead to silent transfer failures with non-standard ERC20 tokens, resulting in state inconsistencies, stuck funds, and potential financial losses.
 
 ## Location of Affected Code
 
 File: [src/CoreWriterReadCaller.sol#L101-L127](https://github.com/pear-protocol/pear-vault-smartcontracts/blob/f681d7cc31ba76d521038f65e0e060849de55345/src/CoreWriterReadCaller.sol#L101-L127)
+
 ```solidity
 function sendFundsToSystem(uint256 amount, address token, address backendWallet) external {
     IERC20 tokenContract = IERC20(token);
-    
+
     require(
         tokenContract.balanceOf(address(this)) >= amount,
         "Insufficient balance"
     );
-    
+
     // ❌ VULNERABILITY: No return value check
     tokenContract.transfer(backendWallet, amount);
 
@@ -1872,7 +1938,7 @@ function sendFundsToSystem(uint256 amount, address token, address backendWallet)
         tokenContract.allowance(backendWallet, address(this)) >= amount,
         "Insufficient allowance"
     );
-    
+
     // ❌ VULNERABILITY: No return value check
     tokenContract.transferFrom(
         backendWallet,
@@ -1883,6 +1949,7 @@ function sendFundsToSystem(uint256 amount, address token, address backendWallet)
 ```
 
 ## Impact
+
 Transfers may silently fail with tokens like USDT, BNB, and OMG, causing the contract to believe tokens were transferred when they actually weren't.
 
 ## Recommendation

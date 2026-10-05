@@ -8,7 +8,7 @@ Learn more about us at [shieldify.org](https://shieldify.org/).
 
 This security review does not guarantee bulletproof protection against a hack or exploit. Smart contracts are a novel technological feat with many known and unknown risks. The protocol, which this report is intended for, indemnifies Shieldify Security against any responsibility for any misbehavior, bugs, or exploits affecting the audited code during any part of the project's life cycle. It is also pivotal to acknowledge that modifications made to the audited code, including fixes for the issues described in this report, may introduce new problems and necessitate additional auditing.
 
-# 3. About Pear
+# 3. About Pear Protocol - Vault V2
 
 Pear is a system of ERC-4626 vaults on HyperEVM where investors pool capital and a designated leader runs delegated pair-trading on Hyperliquid, without ever taking custody of investor funds.
 
